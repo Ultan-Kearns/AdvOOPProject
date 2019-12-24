@@ -1,6 +1,6 @@
 <%@ include file="includes/header.jsp" %>
 
-<div class="animated bounceInDown" style="font-size:48pt; font-family:arial; color:#990000; font-weight:bold">Language Detection System</div>
+<div class="animated bounceInDown" style="font-size:48pt; font-family:arial; color:#990000; font-weight:bold">Language Detection System - Ultan Kearns G00343745</div>
 
 </p>&nbsp;</p>&nbsp;</p>
 
@@ -10,14 +10,14 @@
 
 			<form bgcolor="white" method="POST" action="doProcess">
 				<fieldset>
-					<legend><h3>Specify Details</h3></legend>
+					<legend><h3>Enter your chosen language in the textarea below and hit process to add it to job queue</h3></legend>
 				
-					<b>Select Option:</b>
+					<b>Set Kmer size:</b>
 						
 					<select name="cmbOptions">
-						<option>Option 1</option>
-						<option selected>Option 2</option>
-						<option>Option 3</option>
+						<option>4</option>
+						<option selected>8</option>
+						<option>12</option>
 					</select>	
 					<p/>
 

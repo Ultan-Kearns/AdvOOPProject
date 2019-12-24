@@ -25,9 +25,9 @@ import javax.servlet.http.*;
 */
 
 public class ServiceHandler extends HttpServlet {
-	private String languageDataSet = null; //This variable is shared by all HTTP requests for the servlet
+	private String languageDataSet; //This variable is shared by all HTTP requests for the servlet
 	private static long jobNumber = 0; //The number of the task in the async queue
-
+	private Database d;
 	private File f;
 
 	public void init() throws ServletException {
@@ -49,17 +49,16 @@ public class ServiceHandler extends HttpServlet {
 		String option = req.getParameter("cmbOptions"); //Change options to whatever you think adds value to your assignment...
 		String s = req.getParameter("query");
 		String taskNumber = req.getParameter("frmTaskNumber");
-
-
+ 
 		out.print("<html><head><title>Advanced Object Oriented Software Development Assignment</title>");
 		out.print("</head>");
 		out.print("<body>");
 
 		if (taskNumber == null){
-			taskNumber = new String("T" + jobNumber);
+			taskNumber = new String("Task Number: " + jobNumber);
 			jobNumber++;
 			//Add job to in-queue
-		}else{
+ 		}else{
 			//Check out-queue for finished job
 		}
 
