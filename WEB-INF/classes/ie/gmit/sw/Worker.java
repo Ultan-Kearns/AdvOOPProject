@@ -16,6 +16,10 @@ public class Worker {
 	 * kmers 
 	 * */
 	public static StringBuffer parse(String subjectString,int kmer) {
+		//remove whitespace from subject string
+		subjectString = subjectString.replace(" ", "");
+		//check subject string has even length if not append 0
+		//this is because the parser breaks the string up into even nums only
 		if (subjectString.length() % 2 != 0) {
 			subjectString += "0";
 		}
