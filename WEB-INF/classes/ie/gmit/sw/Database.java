@@ -10,7 +10,7 @@ public class Database {
 		Map<Integer, LanguageEntry> langDb = getLanguageEntries(lang);
 		
 		int frequency = 1;
-		if (langDb.containsKey(kmer)) {
+		if (langDb.containsKey(kmer)) { 
 			frequency += langDb.get(kmer).getFrequency();
 		}
 		langDb.put(kmer, new LanguageEntry(kmer, frequency));

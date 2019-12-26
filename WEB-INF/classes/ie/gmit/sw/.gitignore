@@ -3,3 +3,5 @@
 /Database.class
 /Language.class
 /LanguageEntry.class
+/Request.class
+/Worker.class

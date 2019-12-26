@@ -1,6 +1,14 @@
 package ie.gmit.sw;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -29,7 +37,8 @@ public class ServiceHandler extends HttpServlet {
 	private static long jobNumber = 0; //The number of the task in the async queue
 	private Database d;
 	private File f;
-
+	private Map<String, Language> outQueue = new ConcurrentHashMap<String, Language>();
+	private List<Request> inQueue = new LinkedList<Request>();
 	public void init() throws ServletException {
 		ServletContext ctx = getServletContext(); //Get a handle on the application context
 		languageDataSet = ctx.getInitParameter("LANGUAGE_DATA_SET"); //Reads the value from the <context-param> in web.xml
@@ -47,7 +56,7 @@ public class ServiceHandler extends HttpServlet {
 
 		//Initialise some request varuables with the submitted form info. These are local to this method and thread safe...
 		String option = req.getParameter("cmbOptions"); //Change options to whatever you think adds value to your assignment...
-		String s = req.getParameter("query");
+		String message = req.getParameter("query");
 		String taskNumber = req.getParameter("frmTaskNumber");
  
 		out.print("<html><head><title>Advanced Object Oriented Software Development Assignment</title>");
@@ -58,19 +67,24 @@ public class ServiceHandler extends HttpServlet {
 			taskNumber = new String("Task Number: " + jobNumber);
 			jobNumber++;
 			//Add job to in-queue
+			inQueue.add(0,new Request(message,jobNumber));
  		}else{
-			//Check out-queue for finished job
+			if(outQueue.containsKey(taskNumber)) {
+				out.print("Language: " + outQueue.get(taskNumber));
+				outQueue.remove(taskNumber);
+				
+			}
 		}
 
 
 
-		out.print("<H1>Processing request for Job#: " + taskNumber + "</H1>");
+		out.print("<H1>Processing job number: " + taskNumber + "</H1>");
 		out.print("<div id=\"r\"></div>");
 
 		out.print("<font color=\"#993333\"><b>");
 		out.print("Language Dataset is located at " + languageDataSet + " and is <b><u>" + f.length() + "</u></b> bytes in size");
 		out.print("<br>Option(s): " + option);
-		out.print("<br>Query Text : " + s);
+		out.print("<br>Query Text : " + message);
 		out.print("</font><p/>");
 
 		out.print("<br>This servlet should only be responsible for handling client request and returning responses. Everything else should be handled by different objects. ");
@@ -79,11 +93,7 @@ public class ServiceHandler extends HttpServlet {
 
 		out.print("<P> Next Steps:");
 		out.print("<OL>");
-		out.print("<LI>Generate a big random number to use a a job number, or just increment a static long variable declared at a class level, e.g. jobNumber.");
-		out.print("<LI>Create some type of an object from the request variables and jobNumber.");
-		out.print("<LI>Add the message request object to a LinkedList or BlockingQueue (the IN-queue)");
-		out.print("<LI>Return the jobNumber to the client web browser with a wait interval using <meta http-equiv=\"refresh\" content=\"10\">. The content=\"10\" will wait for 10s.");
-		out.print("<LI>Have some process check the LinkedList or BlockingQueue for message requests.");
+ 		out.print("<LI>Have some process check the LinkedList or BlockingQueue for message requests.");
 		out.print("<LI>Poll a message request from the front of the queue and pass the task to the language detection service.");
 		out.print("<LI>Add the jobNumber as a key in a Map (the OUT-queue) and an initial value of null.");
 		out.print("<LI>Return the result of the language detection system to the client next time a request for the jobNumber is received and the task has been complete (value is not null).");
@@ -91,8 +101,9 @@ public class ServiceHandler extends HttpServlet {
 
 		out.print("<form method=\"POST\" name=\"frmRequestDetails\">");
 		out.print("<input name=\"cmbOptions\" type=\"hidden\" value=\"" + option + "\">");
-		out.print("<input name=\"query\" type=\"hidden\" value=\"" + s + "\">");
+		out.print("<input name=\"query\" type=\"hidden\" value=\"" + message + "\">");
 		out.print("<input name=\"frmTaskNumber\" type=\"hidden\" value=\"" + taskNumber + "\">");
+		out.print("<meta http-equiv=\\\"refresh\\\" content=\\\"10\\\">");
 		out.print("</form>");
 		out.print("</body>");
 		out.print("</html>");
@@ -107,4 +118,9 @@ public class ServiceHandler extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doGet(req, resp);
  	}
+	//to test
+	public static void main(String[] args) {
+		StringBuilder test = Worker.parse("whythefuckdoesn'titwork");
+		System.out.println(test);
+	}
 }

@@ -10,7 +10,7 @@
 
 			<form bgcolor="white" method="POST" action="doProcess">
 				<fieldset>
-					<legend><h3>Enter your chosen language in the textarea below and hit process to add it to job queue</h3></legend>
+					<legend><h3>Enter your chosen language in the textarea below and hit Detect Language to add it to job queue</h3></legend>
 				
 					<b>Set Kmer size:</b>
 						
@@ -25,7 +25,7 @@
 					<textarea name="query" rows="10" cols="100"  wrap="soft"></textarea>	
 					<p/>
 
-					<center><input type="submit" value="Process"></center>
+					<center><input type="submit" value="Detect Language"></center>
 				</fieldset>							
 			</form>	
 
