@@ -9,20 +9,28 @@ public class Worker {
 
 	}
 
-	// parse string into kmer
-	public static StringBuilder parse(String s) {
-		if (s.length() % 2 != 0) {
-			s += "0";
+	/**
+	 * This function parse takes a string @param s and an int @param kmer as parameters then 
+	 * breaks the string up into Kmers of the integer specified and 
+	 * returns a stringbuffer which is equal to the string but broken into
+	 * kmers 
+	 * */
+	public static StringBuffer parse(String subjectString,int kmer) {
+		if (subjectString.length() % 2 != 0) {
+			subjectString += "0";
 		}
 		final char delimiter = '_';
-		final StringBuilder parsed = new StringBuilder(s);
-		int count = 0;
-		System.out.println(parsed.length());
-		for (int i = 0; i < s.length(); i++) {
-			if (i % 2 == 0 && i != 0) {
-				parsed.insert(i, delimiter);
-			}
+		//need refactor
+		String kmers = "";
+		for(int i = 0; i < kmer; i++)
+		{
+			kmers += ".";
 		}
+		//replace character at every two characters with delimiter except for end of string
+		//?!$ ensures that no delimiter will be placed at end of the subject string
+		subjectString = subjectString.replaceAll(kmers+"(?!$)", "$0"+delimiter);
+		final StringBuffer parsed = new StringBuffer(subjectString);
+		//return string broken into k-mers
 		return parsed;
 	}
 

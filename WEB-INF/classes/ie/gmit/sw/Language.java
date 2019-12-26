@@ -1,5 +1,9 @@
 package ie.gmit.sw;
-
+/**
+ * 
+ * @author sl0th
+ * This is an enumeration of all 234 languages in the data set
+ */
 public enum Language {
 	Achinese ("Achinese"),
 	Afrikaans ("Afrikaans"),

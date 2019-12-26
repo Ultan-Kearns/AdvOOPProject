@@ -31,25 +31,38 @@ import javax.servlet.http.*;
  * Do NOT submit the wili-2018 text file with your assignment!
  *
 */
-
+/**
+ * 
+ * @author Ultan Kearns
+ * @version 1.00
+ * @Note Code was made using templates from John Healy which will be refactored by me
+ * 
+ */
 public class ServiceHandler extends HttpServlet {
+	
 	private String languageDataSet; //This variable is shared by all HTTP requests for the servlet
 	private static long jobNumber = 0; //The number of the task in the async queue
 	private Database d;
 	private File f;
 	private Map<String, Language> outQueue = new ConcurrentHashMap<String, Language>();
 	private List<Request> inQueue = new LinkedList<Request>();
+	/**
+	 * Initializes the servelet this is used to do a basic setup of the 
+	 * server and throws an exception if servlet fails to start
+	 * and it loads the data set 
+	 */
 	public void init() throws ServletException {
 		ServletContext ctx = getServletContext(); //Get a handle on the application context
 		languageDataSet = ctx.getInitParameter("LANGUAGE_DATA_SET"); //Reads the value from the <context-param> in web.xml
-
 		//You can start to build the subject database at this point. The init() method is only ever called once during the life cycle of a servlet
-
 		f = new File(languageDataSet);
-
 
 	}
 
+	/**
+	 * The doGet method takes two input params @param HttpServletRequest req & @param HttpServletResponse resp
+	 * and is responsible for setting up the UI 
+	 */
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("text/html"); //Output the MIME type
 		PrintWriter out = resp.getWriter(); //Write out text. We can write out binary too and change the MIME type...
@@ -114,13 +127,19 @@ public class ServiceHandler extends HttpServlet {
 
 
 	}
-
+	/**
+	 * doPost method takes two params @param HttpServletRequest req & @param HttpServletResponse resp and is 
+	 * responsible for taking in the request and returning a response
+	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doGet(req, resp);
  	}
-	//to test
+	/**
+	 * This main method is used for testing and will not be used in final release
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		StringBuilder test = Worker.parse("whythefuckdoesn'titwork");
+		StringBuffer test = Worker.parse("thisisatest",2);
 		System.out.println(test);
 	}
 }
