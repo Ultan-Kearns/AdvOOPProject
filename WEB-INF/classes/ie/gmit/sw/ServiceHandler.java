@@ -12,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import com.sun.org.apache.xml.internal.security.Init;
+
 
 /*
  * To compile this servlet, open a command prompt in the web application directory and execute the following commands:
@@ -35,7 +37,7 @@ import javax.servlet.http.*;
  * 
  * @author Ultan Kearns
  * @version 1.00
- * @Note Code was made using templates from John Healy which will be refactored by me
+ * @note Code was made using templates from John Healy which will be refactored and modified by me
  * 
  */
 public class ServiceHandler extends HttpServlet {
@@ -46,6 +48,7 @@ public class ServiceHandler extends HttpServlet {
 	private File f;
 	private Map<String, Language> outQueue = new ConcurrentHashMap<String, Language>();
 	private List<Request> inQueue = new LinkedList<Request>();
+	private FileReader fr; 
 	/**
 	 * Initializes the servelet this is used to do a basic setup of the 
 	 * server and throws an exception if servlet fails to start
@@ -56,7 +59,27 @@ public class ServiceHandler extends HttpServlet {
 		languageDataSet = ctx.getInitParameter("LANGUAGE_DATA_SET"); //Reads the value from the <context-param> in web.xml
 		//You can start to build the subject database at this point. The init() method is only ever called once during the life cycle of a servlet
 		f = new File(languageDataSet);
-
+	}
+	//read in file store in map string languageString, String language, use regEx to find string after @ symbol
+	public  void readFile() {
+ 		try {
+			fr = new FileReader(f);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int i = 0;
+		StringBuffer file = new StringBuffer();
+		try {
+			while((i = fr.read()) != -1) {
+				System.out.println((char) i);
+				file.append((char)i);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+ 
 	}
 
 	/**
@@ -83,6 +106,8 @@ public class ServiceHandler extends HttpServlet {
 			inQueue.add(0,new Request(message,jobNumber));
  		}else{
 			if(outQueue.containsKey(taskNumber)) {
+				//get worker to work in here
+				//Worker.parse(subjectString, kmer)
 				out.print("Language: " + outQueue.get(taskNumber));
 				outQueue.remove(taskNumber);
 				
@@ -117,6 +142,7 @@ public class ServiceHandler extends HttpServlet {
 		out.print("<input name=\"query\" type=\"hidden\" value=\"" + message + "\">");
 		out.print("<input name=\"frmTaskNumber\" type=\"hidden\" value=\"" + taskNumber + "\">");
 		out.print("<meta http-equiv=\\\"refresh\\\" content=\\\"10\\\">");
+		//call pull request here to poll queues
 		out.print("</form>");
 		out.print("</body>");
 		out.print("</html>");
@@ -139,7 +165,8 @@ public class ServiceHandler extends HttpServlet {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		StringBuffer test = Worker.parse("Hello is it me you're looking for ",2);
+		StringBuffer test = Worker.parse("Hello is it me you're looking for    ",2);
 		System.out.println(test);
+		
 	}
 }

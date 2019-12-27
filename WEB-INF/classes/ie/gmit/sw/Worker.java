@@ -37,5 +37,4 @@ public class Worker {
 		//return string broken into k-mers
 		return parsed;
 	}
-
 }
