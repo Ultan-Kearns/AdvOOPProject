@@ -141,8 +141,8 @@ public class ServiceHandler extends HttpServlet {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		StringBuffer test = Worker.parse("Hello is it me you're looking for    ","4");
+		StringBuffer test = Worker.parse("Hello is it me you're   looking for    ","4");
 		System.out.println(test);
-		Worker.readFile();
+		ReadFile.read();
 	}
 }
