@@ -15,7 +15,7 @@ public class Worker {
 	 * returns a stringbuffer which is equal to the string but broken into
 	 * kmers 
 	 * */
-	public static StringBuffer parse(String subjectString,int kmer) {
+	public static StringBuffer parse(String subjectString,String option) {
 		//remove whitespace from subject string
 		subjectString = subjectString.replace(" ", "");
 		//check subject string has even length if not append 0
@@ -26,7 +26,7 @@ public class Worker {
 		final char delimiter = '_';
 		//need refactor
 		String kmers = "";
-		for(int i = 0; i < kmer; i++)
+		for(int i = 0; i < Integer.parseInt(option); i++)
 		{
 			kmers += ".";
 		}

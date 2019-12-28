@@ -45,10 +45,10 @@ public class ServiceHandler extends HttpServlet {
 	private String languageDataSet; //This variable is shared by all HTTP requests for the servlet
 	private static long jobNumber = 0; //The number of the task in the async queue
 	private Database d;
-	private File f;
+	private static File f;
 	private Map<String, Language> outQueue = new ConcurrentHashMap<String, Language>();
 	private List<Request> inQueue = new LinkedList<Request>();
-	private FileReader fr; 
+	private static FileReader fr; 
 	/**
 	 * Initializes the servelet this is used to do a basic setup of the 
 	 * server and throws an exception if servlet fails to start
@@ -61,7 +61,7 @@ public class ServiceHandler extends HttpServlet {
 		f = new File(languageDataSet);
 	}
 	//read in file store in map string languageString, String language, use regEx to find string after @ symbol
-	public  void readFile() {
+	public static  void readFile() {
  		try {
 			fr = new FileReader(f);
 		} catch (FileNotFoundException e) {
@@ -106,8 +106,7 @@ public class ServiceHandler extends HttpServlet {
 			inQueue.add(0,new Request(message,jobNumber));
  		}else{
 			if(outQueue.containsKey(taskNumber)) {
-				//get worker to work in here
-				//Worker.parse(subjectString, kmer)
+				//get worker to work in heres
 				out.print("Language: " + outQueue.get(taskNumber));
 				outQueue.remove(taskNumber);
 				
@@ -158,15 +157,15 @@ public class ServiceHandler extends HttpServlet {
 	 * responsible for taking in the request and returning a response
 	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		doGet(req, resp);
+ 		doGet(req, resp);
  	}
 	/**
 	 * This main method is used for testing and will not be used in final release
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		StringBuffer test = Worker.parse("Hello is it me you're looking for    ",2);
+		StringBuffer test = Worker.parse("Hello is it me you're looking for    ","4");
 		System.out.println(test);
-		
+		readFile();
 	}
 }
