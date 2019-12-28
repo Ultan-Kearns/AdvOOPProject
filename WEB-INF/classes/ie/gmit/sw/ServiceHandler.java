@@ -45,10 +45,9 @@ public class ServiceHandler extends HttpServlet {
 	private String languageDataSet; //This variable is shared by all HTTP requests for the servlet
 	private static long jobNumber = 0; //The number of the task in the async queue
 	private Database d;
-	private static File f;
+	private File f;
 	private Map<String, Language> outQueue = new ConcurrentHashMap<String, Language>();
 	private List<Request> inQueue = new LinkedList<Request>();
-	private static FileReader fr; 
 	/**
 	 * Initializes the servelet this is used to do a basic setup of the 
 	 * server and throws an exception if servlet fails to start
@@ -60,28 +59,6 @@ public class ServiceHandler extends HttpServlet {
 		//You can start to build the subject database at this point. The init() method is only ever called once during the life cycle of a servlet
 		f = new File(languageDataSet);
 	}
-	//read in file store in map string languageString, String language, use regEx to find string after @ symbol
-	public static  void readFile() {
- 		try {
-			fr = new FileReader(f);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		int i = 0;
-		StringBuffer file = new StringBuffer();
-		try {
-			while((i = fr.read()) != -1) {
-				System.out.println((char) i);
-				file.append((char)i);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
- 
-	}
-
 	/**
 	 * The doGet method takes two input params @param HttpServletRequest req & @param HttpServletResponse resp
 	 * and is responsible for setting up the UI 
@@ -166,6 +143,6 @@ public class ServiceHandler extends HttpServlet {
 	public static void main(String[] args) {
 		StringBuffer test = Worker.parse("Hello is it me you're looking for    ","4");
 		System.out.println(test);
-		readFile();
+		Worker.readFile();
 	}
 }
