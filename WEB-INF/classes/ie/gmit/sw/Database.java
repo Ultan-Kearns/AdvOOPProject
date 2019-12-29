@@ -4,7 +4,12 @@ import java.util.*;
 
 public class Database {
 	private Map<Language, Map<Integer, LanguageEntry>> db = new TreeMap<>();
-	
+	/**
+	 * 
+	 * @param s
+	 * @param lang
+	 * Takes charsequence and language as parameters and stores them in Map
+	 */
 	public void add(CharSequence s, Language lang) {
 		int kmer = s.hashCode();
 		Map<Integer, LanguageEntry> langDb = getLanguageEntries(lang);
@@ -16,7 +21,13 @@ public class Database {
 		langDb.put(kmer, new LanguageEntry(kmer, frequency));
 		
 	}
-	
+	/**
+	 * 
+	 * @param lang
+	 * @return
+	 * 
+	 * Maps an integer to the language entry
+	 */
 	private Map<Integer, LanguageEntry> getLanguageEntries(Language lang){
 		Map<Integer, LanguageEntry> langDb = null; 
 		if (db.containsKey(lang)) {
@@ -27,7 +38,11 @@ public class Database {
 		}
 		return langDb;
 	}
-	
+	/**
+	 * 
+	 * @param max
+	 * Resizes the data set
+	 */
 	public void resize(int max) {
 		Set<Language> keys = db.keySet();
 		for (Language lang : keys) {
@@ -35,7 +50,9 @@ public class Database {
 			db.put(lang, top);
 		}
 	}
-	
+	/**
+	 * Gets Language that is on top
+	 */
 	public Map<Integer, LanguageEntry> getTop(int max, Language lang) {
 		Map<Integer, LanguageEntry> temp = new TreeMap<>();
 		List<LanguageEntry> les = new ArrayList<>(db.get(lang).values());
@@ -51,7 +68,12 @@ public class Database {
 		
 		return temp;
 	}
-	
+	/**
+	 * 
+	 * @param query
+	 * @return
+	 * Stores the result of calculating oopm to a treeset
+	 */
 	public Language getLanguage(Map<Integer, LanguageEntry> query) {
 		TreeSet<OutOfPlaceMetric> oopm = new TreeSet<>();
 		
@@ -61,7 +83,7 @@ public class Database {
 		}
 		return oopm.first().getLanguage();
 	}
-	
+ 
 	private int getOutOfPlaceDistance(Map<Integer, LanguageEntry> query, Map<Integer, LanguageEntry> subject) {
 		int distance = 0;
 		
@@ -77,6 +99,7 @@ public class Database {
 		return distance;
 	}
 	
+
 	private class OutOfPlaceMetric implements Comparable<OutOfPlaceMetric>{
 		private Language lang;
 		private int distance;
