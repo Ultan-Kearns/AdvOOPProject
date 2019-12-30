@@ -12,9 +12,12 @@ public class Worker {
 	/**
 	 * Get next job from the in-queue which is defined in service handler
 	 */
-	public static void getJob(Request r,String option) {
-		//need to add this to outQueue
-		Parser.parse(r.getMessage(),option);
+	public static String getJob(Request r,String option) {
+		String s = Parser.parse(r.getMessage(),option).toString();
+		//need to perform distance calculation and compare to the file
+		
+		System.out.println(s);
+		return s;
 	}
 	/**
 	 * This method will put the result from performing the distance calculation into the out-queue

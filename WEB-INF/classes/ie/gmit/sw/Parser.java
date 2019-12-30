@@ -18,7 +18,7 @@ public class Parser {
 	/**
 	 * This method reads the information from the dataset and stores it in a map
 	 */
-	public static void read() {
+	public static StringBuffer readFile() {
 		FileReader fr = null;
 		File f = new File("/data/wili-2018-Large-117500-Edited.txt");
 		try {
@@ -33,20 +33,16 @@ public class Parser {
 
 		try {
 			while ((i = fr.read()) != -1) {
-				System.out.println((char) i);
-				file.append(i);
-				if (file.charAt(i) == '@') {
-					mapLanguage.put(file, "");
-					// clear map
-					file.delete(0, i);
-				}
+				file.append((char) i);
+				
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-	}
+		file = parse(file.toString(), "2");
+		return file;
+	}	
 
 	/**
 	 * This function parse takes a string @param subjectString and another String @param option, which is defined in service handler,as

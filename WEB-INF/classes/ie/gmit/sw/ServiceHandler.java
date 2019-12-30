@@ -120,12 +120,13 @@ public class ServiceHandler extends HttpServlet {
 		out.print("<meta http-equiv=\\\"refresh\\\" content=\\\"10\\\">");
 		//call pull request here to poll queues
 		//retrieve job from top of inQueue FIFO - pass in option for kmer size
-		Worker.getJob(inQueue.get(0),option);
+		out.print("<p>Test" + Worker.getJob(inQueue.get(0),option)+ "</p>");
 		out.print("</form>");
 		out.print("</body>");
 		out.print("</html>");
 
 		out.print("<script>");
+		//set waiting period 
 		out.print("var wait=setTimeout(\"document.frmRequestDetails.submit();\", 10000);");
 		out.print("</script>");
 
@@ -145,6 +146,9 @@ public class ServiceHandler extends HttpServlet {
 	public static void main(String[] args) {
 		StringBuffer test = Parser.parse("T e s t ","2");
 		System.out.println(test);
- 
+		Request r = new Request("This is a test", 1);
+		Worker.getJob(r, "2");
+		StringBuffer temp = Parser.readFile();
+		System.out.println(temp);
 	}
 }
