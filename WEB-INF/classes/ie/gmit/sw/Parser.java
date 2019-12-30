@@ -1,5 +1,6 @@
 package ie.gmit.sw;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,8 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 
- * @author sl0th
- * This class will handle the parsing of data into k-mers and the reading in of the dataset
+ * @author sl0th This class will handle the parsing of data into k-mers and the
+ *         reading in of the dataset
  */
 public class Parser {
 	// read in file store in map string languageString, String language, use regEx
@@ -19,22 +20,21 @@ public class Parser {
 	 * This method reads the information from the dataset and stores it in a map
 	 */
 	public static StringBuffer readFile() {
-		FileReader fr = null;
+		BufferedReader br = null;
 		File f = new File("/data/wili-2018-Large-117500-Edited.txt");
 		try {
-			fr = new FileReader(f);
+			 br = new BufferedReader(new FileReader(f)); 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int i = 0;
 		StringBuffer file = new StringBuffer();
 		Map<StringBuffer, String> mapLanguage = new ConcurrentHashMap<StringBuffer, String>();
-
 		try {
-			while ((i = fr.read()) != -1) {
-				file.append((char) i);
-				
+			String temp;
+			while ((temp = br.readLine())!= null) {
+				file.append(temp);
+				System.out.println(temp);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -42,12 +42,13 @@ public class Parser {
 		}
 		file = parse(file.toString(), "2");
 		return file;
-	}	
+	}
 
 	/**
-	 * This function parse takes a string @param subjectString and another String @param option, which is defined in service handler,as
-	 * parameters then breaks the string up into Kmers of the integer specified and
-	 * returns a stringbuffer which is equal to the string but broken into kmers
+	 * This function parse takes a string @param subjectString and another
+	 * String @param option, which is defined in service handler,as parameters then
+	 * breaks the string up into Kmers of the integer specified and returns a
+	 * stringbuffer which is equal to the string but broken into kmers
 	 */
 	public static StringBuffer parse(String subjectString, String option) {
 		// remove whitespace from subject string
