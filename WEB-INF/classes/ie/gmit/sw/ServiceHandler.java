@@ -144,11 +144,11 @@ public class ServiceHandler extends HttpServlet {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		StringBuffer test = Parser.parse("T e s t ","2");
+		String test = Parser.parse("T e s t ","2");
 		System.out.println(test);
 		Request r = new Request("This is a test", 1);
 		Worker.getJob(r, "2");
-		StringBuffer temp = Parser.readFile();
-		System.out.println(temp);
+		Map temp = Parser.readFile("3");
+		System.out.println(temp.get("TEST"));
 	}
 }

@@ -15,7 +15,6 @@ public class Worker {
 	public static String getJob(Request r,String option) {
 		String s = Parser.parse(r.getMessage(),option).toString();
 		//need to perform distance calculation and compare to the file
-		
 		System.out.println(s);
 		return s;
 	}

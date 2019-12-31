@@ -19,29 +19,30 @@ public class Parser {
 	/**
 	 * This method reads the information from the dataset and stores it in a map
 	 */
-	public static StringBuffer readFile() {
+	public static Map readFile(String option) {
 		BufferedReader br = null;
-		File f = new File("/data/wili-2018-Large-117500-Edited.txt");
+		File f;
 		try {
-			 br = new BufferedReader(new FileReader(f)); 
+			f = new File("/data/wili-2018-Edited.txt");
+			br = new BufferedReader(new FileReader(f));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		StringBuffer file = new StringBuffer();
-		Map<StringBuffer, String> mapLanguage = new ConcurrentHashMap<StringBuffer, String>();
+ 		Map<String, String> mapLanguage = new ConcurrentHashMap<String, String>();
+ 		String temp = "";
 		try {
-			String temp;
-			while ((temp = br.readLine())!= null) {
-				file.append(temp);
-				System.out.println(temp);
+			
+			while ((temp = br.readLine()) != null) {
+				temp = Parser.parse(temp, option);
+				mapLanguage.put("TEST", temp);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		file = parse(file.toString(), "2");
-		return file;
+	 
+		return mapLanguage;
 	}
 
 	/**
@@ -50,7 +51,7 @@ public class Parser {
 	 * breaks the string up into Kmers of the integer specified and returns a
 	 * stringbuffer which is equal to the string but broken into kmers
 	 */
-	public static StringBuffer parse(String subjectString, String option) {
+	public static String parse(String subjectString, String option) {
 		// remove whitespace from subject string
 		subjectString = subjectString.replace(" ", "");
 		// check subject string has even length if not append 0
@@ -72,6 +73,6 @@ public class Parser {
 		subjectString = subjectString.replaceAll("\\s", "");
 		final StringBuffer parsed = new StringBuffer(subjectString);
 		// return string broken into k-mers
-		return parsed;
+		return parsed.toString();
 	}
 }
