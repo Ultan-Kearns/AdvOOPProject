@@ -148,7 +148,7 @@ public class ServiceHandler extends HttpServlet {
 		System.out.println(test);
 		Request r = new Request("This is a test", 1);
 		Worker.getJob(r, "2");
-		Map temp = Parser.readFile("3");
-		System.out.println(temp.get("TEST"));
+		Map temp = Parser.readFile("100");
+		System.out.println(temp.get("@English"));
 	}
 }

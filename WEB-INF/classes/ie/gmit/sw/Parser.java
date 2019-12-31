@@ -31,11 +31,17 @@ public class Parser {
 		}
  		Map<String, String> mapLanguage = new ConcurrentHashMap<String, String>();
  		String temp = "";
+ 		String key = "";
 		try {
-			
 			while ((temp = br.readLine()) != null) {
+				//get language
+				key = temp.substring(temp.lastIndexOf('@'));
+				//get rid of anything that isn't a letter or a digit
+				temp = temp.replaceAll("\\W", "");
+				//parse using option
 				temp = Parser.parse(temp, option);
-				mapLanguage.put("TEST", temp);
+				//put in map using the Language as a key
+				mapLanguage.put(key, temp);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
