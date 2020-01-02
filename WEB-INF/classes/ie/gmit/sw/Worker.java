@@ -1,5 +1,8 @@
 package ie.gmit.sw;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * 
  * @author sl0th
@@ -14,6 +17,7 @@ public class Worker {
 	 */
 	public static String getJob(Request r,String option) {
 		String s = Parser.parse(r.getMessage(),option).toString();
+		
 		System.out.println(s);
 		putResult(r);
 		return s;
@@ -23,7 +27,7 @@ public class Worker {
 	 */
 	public static void putResult(Request r) {
 		//put result in outqueue
-		ServiceHandler.outQueue.put(r.getTaskNumber(),null);
+		ServiceHandler.outQueue.put(r.getTaskNumber(),Language.Achinese);
 		//need to perform distance calculation and set language
 	}
 }

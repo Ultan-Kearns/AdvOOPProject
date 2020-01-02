@@ -15,7 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Parser {
 	static Database db = new Database();
-	static LanguageEntry lang = new LanguageEntry(0,0);
+ 	static String key;
+ 	Map query = new ConcurrentHashMap<String, Integer>();
 	// read in file store in map string languageString, String language, use regEx
 	// to find string after @ symbol
 	/**
@@ -33,31 +34,35 @@ public class Parser {
 		}
  		Map<String, String> mapLanguage = new ConcurrentHashMap<String, String>();
  		String temp = "";
- 		String key = "";
+ 		key = "";
 		try {
 			while ((temp = br.readLine()) != null) {
 				//get language
 				key = temp.substring(temp.lastIndexOf('@'));
+				key = key.replace("@", "");
 				//get rid of anything that isn't a letter or a digit
 				temp = temp.replaceAll("\\W", "");
 				//parse using option
 				temp = Parser.parse(temp, option);
 				//put in map using the Language as a key
 				mapLanguage.put(key, temp);
-				
+				//need to increase frequency of temp
+				if(mapLanguage.containsValue(temp)) {
+					db.add(temp, Language.valueOf(key));
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	 
 		return mapLanguage;
 	}
 
 	/**
 	 * This function parse takes a string @param subjectString and another
 	 * String @param option, which is defined in service handler,as parameters then
-	 * breaks the string up into Kmers of the integer specified and returns a
+	 * bre
+	 * ks the string up into Kmers of the integer specified and returns a
 	 * stringbuffer which is equal to the string but broken into kmers
 	 */
 	public static String parse(String subjectString, String option) {
@@ -73,13 +78,13 @@ public class Parser {
 		String kmers = "";
 		for (int i = 0; i < Integer.parseInt(option); i++) {
 			kmers += ".";
-		}
+		} 
 		// replace character at every two characters with delimiter except for end of
 		// string
 		// ?!$ ensures that no delimiter will be placed at end of the subject string
 		subjectString = subjectString.replaceAll(kmers + "(?!$)", "$0" + delimiter);		
 		final StringBuffer parsed = new StringBuffer(subjectString);
-		// return string broken into k-mers
-		return parsed.toString();
+		// return string broken into k-mers need to do analysis here
+ 		return parsed.toString();
 	}
 }

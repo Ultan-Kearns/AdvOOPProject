@@ -46,7 +46,7 @@ public class ServiceHandler extends HttpServlet {
 	private static long jobNumber = 0; //The number of the task in the async queue
 	private Database d;
 	private File f;
-	static Map<Long, Language> outQueue = new HashMap<Long, Language>();
+	static Map<Long, Language> outQueue = new ConcurrentHashMap<Long, Language>();
 	private List<Request> inQueue = new LinkedList<Request>();
 	/**
 	 * Initializes the servelet this is used to do a basic setup of the 
@@ -150,6 +150,7 @@ public class ServiceHandler extends HttpServlet {
 		Worker.getJob(r, "2");
 		Map temp = Parser.readFile("100");
 		System.out.println(temp.get("@English"));
-		
-	}
+		Database db = new Database();
+	
+ 	}
 }

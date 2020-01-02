@@ -15,9 +15,9 @@
 					<b>Set Kmer size:</b>
 						
 					<select name="cmbOptions">
-						<option>4</option>
-						<option selected>8</option>
-						<option>12</option>
+						<option>1</option>
+						<option selected>2</option>
+						<option>3</option>
 					</select>	
 					<p/>
 

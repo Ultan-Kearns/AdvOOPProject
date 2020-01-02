@@ -19,7 +19,7 @@ public class Database {
 			frequency += langDb.get(kmer).getFrequency();
 		}
 		langDb.put(kmer, new LanguageEntry(kmer, frequency));
-		
+		System.out.println(toString());
 	}
 	/**
 	 * 
@@ -51,7 +51,7 @@ public class Database {
 		}
 	}
 	/**
-	 * Gets Language that is on top
+	 * Gets Language that has highest rank
 	 */
 	public Map<Integer, LanguageEntry> getTop(int max, Language lang) {
 		Map<Integer, LanguageEntry> temp = new TreeMap<>();
@@ -96,6 +96,7 @@ public class Database {
 				distance += s.getRank() - q.getRank();
 			}
 		}
+		System.out.println(distance);
 		return distance;
 	}
 	
@@ -142,13 +143,13 @@ public class Database {
 		for (Language lang : keys) {
 			langCount++;
 			sb.append(lang.name() + "->\n");
-			 
 			 Collection<LanguageEntry> m = new TreeSet<>(db.get(lang).values());
 			 kmerCount += m.size();
 			 for (LanguageEntry le : m) {
 				 sb.append("\t" + le + "\n");
 			 }
 		}
+		
 		sb.append(kmerCount + " total k-mers in " + langCount + " languages"); 
 		return sb.toString();
 	}
