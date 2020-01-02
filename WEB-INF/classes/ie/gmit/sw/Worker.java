@@ -14,14 +14,16 @@ public class Worker {
 	 */
 	public static String getJob(Request r,String option) {
 		String s = Parser.parse(r.getMessage(),option).toString();
-		//need to perform distance calculation and compare to the file
 		System.out.println(s);
+		putResult(r);
 		return s;
 	}
 	/**
 	 * This method will put the result from performing the distance calculation into the out-queue
 	 */
-	public void putResult() {
-		
+	public static void putResult(Request r) {
+		//put result in outqueue
+		ServiceHandler.outQueue.put(r.getTaskNumber(),null);
+		//need to perform distance calculation and set language
 	}
 }

@@ -46,7 +46,7 @@ public class ServiceHandler extends HttpServlet {
 	private static long jobNumber = 0; //The number of the task in the async queue
 	private Database d;
 	private File f;
-	private Map<String, Language> outQueue = new ConcurrentHashMap<String, Language>();
+	static Map<Long, Language> outQueue = new HashMap<Long, Language>();
 	private List<Request> inQueue = new LinkedList<Request>();
 	/**
 	 * Initializes the servelet this is used to do a basic setup of the 
@@ -75,7 +75,6 @@ public class ServiceHandler extends HttpServlet {
 		out.print("<html><head><title>Advanced Object Oriented Software Development Assignment</title>");
 		out.print("</head>");
 		out.print("<body>");
-
 		if (taskNumber == null){
 			taskNumber = new String("Task Number: " + jobNumber);
 			jobNumber++;
@@ -106,21 +105,21 @@ public class ServiceHandler extends HttpServlet {
 		out.print("</b></font>");
 
 		out.print("<P> Next Steps:");
+		out.print("<p>Test" + Worker.getJob(inQueue.get(0),option)+ "</p>");
+		out.print("<h1>test</h1>");
 		out.print("<OL>");
  		out.print("<LI>Have some process check the LinkedList or BlockingQueue for message requests.");
 		out.print("<LI>Poll a message request from the front of the queue and pass the task to the language detection service.");
 		out.print("<LI>Add the jobNumber as a key in a Map (the OUT-queue) and an initial value of null.");
 		out.print("<LI>Return the result of the language detection system to the client next time a request for the jobNumber is received and the task has been complete (value is not null).");
 		out.print("</OL>");
-
+		
 		out.print("<form method=\"POST\" name=\"frmRequestDetails\">");
 		out.print("<input name=\"cmbOptions\" type=\"hidden\" value=\"" + option + "\">");
 		out.print("<input name=\"query\" type=\"hidden\" value=\"" + message + "\">");
 		out.print("<input name=\"frmTaskNumber\" type=\"hidden\" value=\"" + taskNumber + "\">");
 		out.print("<meta http-equiv=\\\"refresh\\\" content=\\\"10\\\">");
 		//call pull request here to poll queues
-		//retrieve job from top of inQueue FIFO - pass in option for kmer size
-		out.print("<p>Test" + Worker.getJob(inQueue.get(0),option)+ "</p>");
 		out.print("</form>");
 		out.print("</body>");
 		out.print("</html>");
@@ -144,11 +143,13 @@ public class ServiceHandler extends HttpServlet {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		//for testing methods
 		String test = Parser.parse("T e s t ","2");
 		System.out.println(test);
 		Request r = new Request("This is a test", 1);
 		Worker.getJob(r, "2");
 		Map temp = Parser.readFile("100");
 		System.out.println(temp.get("@English"));
+		
 	}
 }
