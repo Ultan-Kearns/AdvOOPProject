@@ -1,7 +1,7 @@
 package ie.gmit.sw;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 
@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Worker gets next job in the inQueue performs operations and returns the result to the out-queue
  */
 public class Worker {
-	static Map query = new ConcurrentHashMap<Integer,String>();
+	static Map query = new HashMap<Integer,Integer>();
 	public Worker() {
 
 	}
@@ -18,11 +18,10 @@ public class Worker {
 	 * @param Request
 	 * @param String
 	 */
-	public static String getJob(Request r,String option) {
-		String s = Parser.parse(r.getMessage(),option).toString();
-		query.put(r.getMessage().toString(),s);
+	public static void getJob(Request r,String option) {
+		System.out.println("IN get job");
+ 		Parser.parse(r.getMessage(),option,1);
  		putResult(r);
-		return s;
 	}
 	/**
 	 * This method will put the result from performing the distance calculation into the out-queue

@@ -105,7 +105,7 @@ public class ServiceHandler extends HttpServlet {
 		out.print("</b></font>");
 
 		out.print("<P> Next Steps:");
-		out.print("<p>Test" + Worker.getJob(inQueue.get(0),option)+ "</p>");
+		out.print("<p>Tes</p>");
 		out.print("<h1>test</h1>");
 		out.print("<OL>");
  		out.print("<LI>Have some process check the LinkedList or BlockingQueue for message requests.");
@@ -144,11 +144,12 @@ public class ServiceHandler extends HttpServlet {
 	 */
 	public static void main(String[] args) {
 		//for testing methods
-		String test = Parser.parse("T e s t ","2");
+		Parser p = new Parser();
+		String test = p.parse("T e s t ","2",1);
 		System.out.println(test);
 		Request r = new Request("This is a test", 1);
 		Worker.getJob(r, "2");
-		Parser p = new Parser();
+		
 		Map temp = p.readFile("2");
 		System.out.println(temp.get("English"));
  

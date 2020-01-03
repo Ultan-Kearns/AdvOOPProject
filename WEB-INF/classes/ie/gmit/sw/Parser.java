@@ -23,9 +23,11 @@ public class Parser {
 	/**
 	 * This method reads the information from the dataset and stores it in a map
 	 */
-	public  Map readFile(String option) {
+	public Map readFile(String option) {
 		BufferedReader br = null;
 		File f;
+		Request r = new Request("tjeo", 1);
+		Worker.getJob(r, option);
 		try {
 			f = new File("/data/wili-2018-Edited.txt");
 			br = new BufferedReader(new FileReader(f));
@@ -39,29 +41,27 @@ public class Parser {
 		key = "";
 		try {
 			while ((temp = br.readLine()) != null) {
-				
+
 				// get language
 				key = temp.substring(temp.lastIndexOf('@'));
 				key = key.replace("@", "");
-				System.out.println("THE KEY = " + key);
-				// get rid of anything that isn't a letter or a digit
+ 				// get rid of anything that isn't a letter or a digit
 				temp = temp.replaceAll("\\W", "");
 				// parse using option
-				temp = Parser.parse(temp, option);
+				temp = Parser.parse(temp, option,0);
 				// put in map using the Language as a key
 				mapLanguage.put(key, temp);
-				//needed to replace all whitespace in key always fun to debug....
+				// needed to replace all whitespace in key always fun to debug....
 				key = key.replaceAll("\\W", "");
 				Language lang = Language.valueOf(key);
-				//pass the charsequence into db along with language to build the database
-				for(int i = Integer.parseInt(option); i < temp.length(); i++) {
-					if(temp.charAt(i) == '_')
+				// parse into kmers then insert kmer size need to refactor only works for 2
+				for (int i = Integer.parseInt(option); i < temp.length(); i++) {
+					if (temp.charAt(i) == '_')
 						continue;
-				 db.add(temp.subSequence(i, i+1), lang);
+					db.add(temp.subSequence(i, i + 1), lang);
 				}
-  			}
-			db.getLanguage(Worker.query);
-	 
+			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,13 +69,14 @@ public class Parser {
 
 		return mapLanguage;
 	}
+
 	/**
 	 * This function parse takes a string @param subjectString and another
 	 * String @param option, which is defined in service handler,as parameters then
 	 * bre ks the string up into Kmers of the integer specified and returns a
 	 * stringbuffer which is equal to the string but broken into kmers
 	 */
-	public static String parse(String subjectString, String option) {
+	public static String parse(String subjectString, String option, int query) {
 		// check subject string has even length if not append 0
 		// this is because the parser breaks the string up into even nums only
 		// need to fix for larger kmers than 2
@@ -85,6 +86,7 @@ public class Parser {
 		final char delimiter = '_';
 		// need refactor
 		String kmers = "";
+		int frequency = 0;
 		for (int i = 0; i < Integer.parseInt(option); i++) {
 			kmers += ".";
 		}
@@ -93,7 +95,20 @@ public class Parser {
 		// ?!$ ensures that no delimiter will be placed at end of the subject string
 		subjectString = subjectString.replaceAll(kmers + "(?!$)", "$0" + delimiter);
 		final StringBuffer parsed = new StringBuffer(subjectString);
-		// return string broken into k-mers need to do analysis here also make lower to lower probability
+		//check if query string
+ 		if (query == 1) {
+			for (int i = Integer.parseInt(option); i < parsed.length(); i++) {
+				if (parsed.charAt(i) == '_')
+					continue;
+				if (Worker.query.containsKey(parsed.subSequence(i, i + 1))) {
+					frequency++;
+				}
+				Worker.query.put(parsed.subSequence(i, i + 1), frequency);
+				System.out.println("test " + Worker.query.get(parsed.subSequence(i, i + 1)));
+			}
+		}
+		// return string broken into k-mers need to do analysis here also make lower to
+		// lower probability
 		return parsed.toString().toLowerCase();
 	}
 }

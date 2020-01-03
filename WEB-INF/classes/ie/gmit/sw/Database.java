@@ -21,7 +21,6 @@ public class Database {
 		//may be issue since passing full string with delimiter
 		langDb.put(kmer, new LanguageEntry(kmer, frequency)); 
 		System.out.println(s + " " + frequency);
-	 
 	}
 	/**
 	 * 
