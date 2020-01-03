@@ -8,7 +8,7 @@ public class Database {
 	 * 
 	 * @param s
 	 * @param lang
-	 * Takes charsequence and language as parameters and stores them in Map
+	 * Takes charsequence and language as parameters and stores them in a language database
 	 */
 	public void add(CharSequence s, Language lang) {
 		int kmer = s.hashCode();
@@ -18,8 +18,10 @@ public class Database {
 		if (langDb.containsKey(kmer)) { 
 			frequency += langDb.get(kmer).getFrequency();
 		}
-		langDb.put(kmer, new LanguageEntry(kmer, frequency));
-		System.out.println(toString());
+		//may be issue since passing full string with delimiter
+		langDb.put(kmer, new LanguageEntry(kmer, frequency)); 
+		System.out.println(s + " " + frequency);
+	 
 	}
 	/**
 	 * 
@@ -97,7 +99,7 @@ public class Database {
 			}
 		}
 		System.out.println(distance);
-		return distance;
+ 		return distance;
 	}
 	
 
@@ -131,7 +133,10 @@ public class Database {
 		
 		
 	}
-	
+	/**
+	 * Returns all pertinent information from this class such as total kmers in languag
+	 * and all languages in the set
+	 */
 	@Override
 	public String toString() {
 		

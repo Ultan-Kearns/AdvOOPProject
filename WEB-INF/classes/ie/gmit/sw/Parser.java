@@ -15,14 +15,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Parser {
 	static Database db = new Database();
- 	static String key;
- 	Map query = new ConcurrentHashMap<String, Integer>();
+	String key;
+	Map query = new ConcurrentHashMap<String, Integer>();
+
 	// read in file store in map string languageString, String language, use regEx
 	// to find string after @ symbol
 	/**
 	 * This method reads the information from the dataset and stores it in a map
 	 */
-	public static Map readFile(String option) {
+	public  Map readFile(String option) {
 		BufferedReader br = null;
 		File f;
 		try {
@@ -32,59 +33,67 @@ public class Parser {
 			// TODO Auto-generated catch blsock
 			e.printStackTrace();
 		}
- 		Map<String, String> mapLanguage = new ConcurrentHashMap<String, String>();
- 		String temp = "";
- 		key = "";
+		// just use database dba
+		Map<String, String> mapLanguage = new ConcurrentHashMap<String, String>();
+		String temp = "";
+		key = "";
 		try {
 			while ((temp = br.readLine()) != null) {
-				//get language
+				
+				// get language
 				key = temp.substring(temp.lastIndexOf('@'));
 				key = key.replace("@", "");
-				//get rid of anything that isn't a letter or a digit
+				System.out.println("THE KEY = " + key);
+				// get rid of anything that isn't a letter or a digit
 				temp = temp.replaceAll("\\W", "");
-				//parse using option
+				// parse using option
 				temp = Parser.parse(temp, option);
-				//put in map using the Language as a key
+				// put in map using the Language as a key
 				mapLanguage.put(key, temp);
-				//need to increase frequency of temp
-				if(mapLanguage.containsValue(temp)) {
-					db.add(temp, Language.valueOf(key));
+				//needed to replace all whitespace in key always fun to debug....
+				key = key.replaceAll("\\W", "");
+				Language lang = Language.valueOf(key);
+				//pass the charsequence into db along with language to build the database
+				for(int i = Integer.parseInt(option); i < temp.length(); i++) {
+					if(temp.charAt(i) == '_')
+						continue;
+				 db.add(temp.subSequence(i, i+1), lang);
 				}
-			}
+  			}
+			db.getLanguage(Worker.query);
+	 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return mapLanguage;
 	}
-
 	/**
 	 * This function parse takes a string @param subjectString and another
 	 * String @param option, which is defined in service handler,as parameters then
-	 * bre
-	 * ks the string up into Kmers of the integer specified and returns a
+	 * bre ks the string up into Kmers of the integer specified and returns a
 	 * stringbuffer which is equal to the string but broken into kmers
 	 */
 	public static String parse(String subjectString, String option) {
 		// check subject string has even length if not append 0
 		// this is because the parser breaks the string up into even nums only
-		//need to fix for larger kmers than 2
+		// need to fix for larger kmers than 2
 		if (subjectString.length() % Integer.parseInt(option) != 0) {
-				subjectString += "0";
+			subjectString += "0";
 		}
-		//think that I need to just compare here then update frequency
 		final char delimiter = '_';
 		// need refactor
 		String kmers = "";
 		for (int i = 0; i < Integer.parseInt(option); i++) {
 			kmers += ".";
-		} 
+		}
 		// replace character at every two characters with delimiter except for end of
 		// string
 		// ?!$ ensures that no delimiter will be placed at end of the subject string
-		subjectString = subjectString.replaceAll(kmers + "(?!$)", "$0" + delimiter);		
+		subjectString = subjectString.replaceAll(kmers + "(?!$)", "$0" + delimiter);
 		final StringBuffer parsed = new StringBuffer(subjectString);
-		// return string broken into k-mers need to do analysis here
- 		return parsed.toString();
+		// return string broken into k-mers need to do analysis here also make lower to lower probability
+		return parsed.toString().toLowerCase();
 	}
 }
