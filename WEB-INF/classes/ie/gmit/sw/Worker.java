@@ -9,7 +9,7 @@ import java.util.Map;
  * Worker gets next job in the inQueue performs operations and returns the result to the out-queue
  */
 public class Worker {
-	static Map query = new HashMap<Integer,Integer>();
+	static Map query = new HashMap<Integer,LanguageEntry>();
 	public Worker() {
 
 	}
@@ -21,6 +21,8 @@ public class Worker {
 	public static void getJob(Request r,String option) {
 		System.out.println("IN get job");
  		Parser.parse(r.getMessage(),option,1);
+ 		Database db = new Database();
+ 
  		putResult(r);
 	}
 	/**

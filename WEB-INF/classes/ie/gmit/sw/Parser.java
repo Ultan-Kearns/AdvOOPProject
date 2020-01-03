@@ -54,11 +54,13 @@ public class Parser {
 				// needed to replace all whitespace in key always fun to debug....
 				key = key.replaceAll("\\W", "");
 				Language lang = Language.valueOf(key);
+				int op = Integer.parseInt(option);
+				System.out.println(option);
 				// parse into kmers then insert kmer size need to refactor only works for 2
-				for (int i = Integer.parseInt(option); i < temp.length(); i++) {
-					if (temp.charAt(i) == '_')
-						continue;
-					db.add(temp.subSequence(i, i + 1), lang);
+				for (int i = op; i < temp.length() - op; i++) {
+					if (temp.charAt(i + 1) =='_' || temp.charAt(i) == '_')
+						continue;	
+					db.add(temp.substring(i, i + op), lang);
 				}
 			}
 
@@ -95,15 +97,15 @@ public class Parser {
 		// ?!$ ensures that no delimiter will be placed at end of the subject string
 		subjectString = subjectString.replaceAll(kmers + "(?!$)", "$0" + delimiter);
 		final StringBuffer parsed = new StringBuffer(subjectString);
-		//check if query string
  		if (query == 1) {
-			for (int i = Integer.parseInt(option); i < parsed.length(); i++) {
-				if (parsed.charAt(i) == '_')
-					continue;
-				if (Worker.query.containsKey(parsed.subSequence(i, i + 1))) {
+ 			int op = Integer.parseInt(option);
+			for (int i = op; i < parsed.length() - op; i++) {
+				if (parsed.charAt(i + 1) =='_' || parsed.charAt(i) == '_')
+					continue;	
+				if (Worker.query.containsKey(parsed.subSequence(i, i + op))) {
 					frequency++;
 				}
-				Worker.query.put(parsed.subSequence(i, i + 1), frequency);
+				Worker.query.put(parsed.substring(i, i + op), frequency);
 				System.out.println("test " + Worker.query.get(parsed.subSequence(i, i + 1)));
 			}
 		}
