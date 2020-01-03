@@ -48,8 +48,7 @@ public class Parser {
  				// get rid of anything that isn't a letter or a digit
 				temp = temp.replaceAll("\\W", "");
 				// parse using option
-				temp = Parser.parse(temp, option,0);
-				// put in map using the Language as a key
+ 				// put in map using the Language as a key
 				mapLanguage.put(key, temp);
 				// needed to replace all whitespace in key always fun to debug....
 				key = key.replaceAll("\\W", "");
@@ -57,9 +56,7 @@ public class Parser {
 				int op = Integer.parseInt(option);
 				System.out.println(option);
 				// parse into kmers then insert kmer size need to refactor only works for 2
-				for (int i = op; i < temp.length() - op; i++) {
-					if (temp.charAt(i + 1) =='_' || temp.charAt(i) == '_')
-						continue;	
+				for (int i = 0; i < temp.length() - op; i++) {
 					db.add(temp.substring(i, i + op), lang);
 				}
 			}
@@ -85,8 +82,7 @@ public class Parser {
 		if (subjectString.length() % Integer.parseInt(option) != 0) {
 			subjectString += "0";
 		}
-		final char delimiter = '_';
-		// need refactor
+ 		// need refactor
 		String kmers = "";
 		int frequency = 0;
 		for (int i = 0; i < Integer.parseInt(option); i++) {
@@ -95,13 +91,11 @@ public class Parser {
 		// replace character at every two characters with delimiter except for end of
 		// string
 		// ?!$ ensures that no delimiter will be placed at end of the subject string
-		subjectString = subjectString.replaceAll(kmers + "(?!$)", "$0" + delimiter);
-		final StringBuffer parsed = new StringBuffer(subjectString);
+ 		final StringBuffer parsed = new StringBuffer(subjectString);
  		if (query == 1) {
  			int op = Integer.parseInt(option);
 			for (int i = op; i < parsed.length() - op; i++) {
-				if (parsed.charAt(i + 1) =='_' || parsed.charAt(i) == '_')
-					continue;	
+
 				if (Worker.query.containsKey(parsed.subSequence(i, i + op))) {
 					frequency++;
 				}
