@@ -86,10 +86,10 @@ public class ServiceHandler extends HttpServlet {
 			// Add job to in-queue
 			inQueue.add(0, new Request(message, jobNumber));
 			Worker.getJob(inQueue.get(0), option);
-			out.print("ADDED JOB  " + jobNumber);
+			out.print("ADDED JOB");
 		} else {
 			out.print(outQueue.containsKey(taskNumber));
-
+			Worker.checkQueue();
 		}
 
 		out.print("<H1>Processing job number: " + taskNumber + "</H1>");
@@ -118,13 +118,6 @@ public class ServiceHandler extends HttpServlet {
 		out.print(
 				"<LI>Return the result of the language detection system to the client next time a request for the jobNumber is received and the task has been complete (value is not null).");
 		out.print("</OL>");
-		if (Worker.checkQueue() != -1) {
-
-			// get worker to work in heres
-			out.print("Language: " + outQueue.get(1));
-			outQueue.remove(taskNumber);
-		}
-
 		out.print("<form method=\"POST\" name=\"frmRequestDetails\">");
 		out.print("<input name=\"cmbOptions\" type=\"hidden\" value=\"" + option + "\">");
 		out.print("<input name=\"query\" type=\"hidden\" value=\"" + message + "\">");
@@ -159,8 +152,8 @@ public class ServiceHandler extends HttpServlet {
 	 */
 	public static void main(String[] args) {
 		// for testing methods
-		Parser.readFile("2");
-		Request r = new Request("Today was gonna be the day", 1);
-		Worker.getJob(r, "2");
+		Parser.readFile("1");
+		Request r = new Request("bruidhinn rithe, cuiridh e a làmhan timcheall oirre agus bidh e ga suirghe gus am bi i a’ tuiteam ann an gaol air. Uaireannan bidh ise a’ gabhail òrain-gaoil dha agus",1);
+  		Worker.getJob(r, "4");
 	}
 }

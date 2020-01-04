@@ -34,7 +34,7 @@ public class Parser {
 			// TODO Auto-generated catch blsock
 			e.printStackTrace();
 		}
- 		String temp = "";
+		String temp = "";
 		try {
 			Language lang;
 			while ((temp = br.readLine()) != null) {
@@ -48,14 +48,13 @@ public class Parser {
 				key = key.replaceAll("\\W", "");
 				lang = Language.valueOf(key);
 				int op = Integer.parseInt(option);
-				// parse into kmers then insert kmer size need to refactor only works for 2
-				for (int i = 0; i < temp.length() - op; i++) {
-					database.add(temp.substring(i, i + op), lang);
-				
+				// parse into kmers then insert kmer size
+				for (int i = 0; i < temp.length() - op; i+= op) {
+					database.add(temp.substring(i, i + op).toLowerCase(), lang);
 				}
 			}
- 			database.resize(300);
- 		} catch (IOException e) {
+			database.resize(300);
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -69,27 +68,22 @@ public class Parser {
 	 */
 	public static Map parse(String subjectString, String option) {
 		Map<String, LanguageEntry> queryMap = new HashMap<String, LanguageEntry>();
-		// check subject string has even length if not append 0
-		// this is because the parser breaks the string up into even nums only
-		// need to fix for larger kmers than 2
-		if (subjectString.length() % Integer.parseInt(option) != 0) {
-			subjectString += "0";
-		}
 		// need refactor
-		int frequency = 0;
-		// replace character at every two characters with delimiter except for end of
-		// string
-		// ?!$ ensures that no delimiter will be placed at end of the subject string
 		final StringBuffer parsed = new StringBuffer(subjectString);
 		int op = Integer.parseInt(option);
-		for (int i = 0; i < parsed.length() - op; i++) {
-
-			if (queryMap.containsKey(parsed.subSequence(i, i + op).hashCode())) {
-				frequency++;
+		System.out.println(parsed);
+		for (int i = 0; i < parsed.length() - op; i+= op) {
+			int frequency = 1;
+			// need to set frequency of kmer
+			System.out.println(parsed.substring(i, i + op));
+			if (queryMap.containsKey(parsed.substring(i, i + op).toLowerCase())) {
+ 				System.out.println("FREQUENCY " + queryMap.get(parsed.substring(i, i + op).toLowerCase()).getFrequency());
+				frequency += queryMap.get(parsed.substring(i, i + op).toLowerCase()).getFrequency();
 			}
-			System.out.println(parsed.substring(i, i + op).toLowerCase());
+
 			queryMap.put(parsed.substring(i, i + op).toLowerCase(),
-					new LanguageEntry(parsed.substring(i, i + op).hashCode(), frequency));
+					new LanguageEntry(parsed.substring(i, i + op).toLowerCase().hashCode(), frequency));
+
 		}
 		return queryMap;
 	}

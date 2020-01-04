@@ -76,14 +76,12 @@ public class Database {
 
 	/**
 	 * 
-	 * @param query
+	 * @param Map<Integer, LanguageEntry> 
 	 * @return Stores the result of calculating oopm to a treeset
 	 */
 	public Language getLanguage(Map<Integer, LanguageEntry> query) {
 		TreeSet<OutOfPlaceMetric> oopm = new TreeSet<>();
 		Set<Language> langs = db.keySet();
-		// fails here because db not saving from add
- 
 		for (Language lang : langs) {
 			oopm.add(new OutOfPlaceMetric(lang, getOutOfPlaceDistance(query, db.get(lang))));
 		}
@@ -102,7 +100,7 @@ public class Database {
 				distance += s.getRank() - q.getRank();
 			}
 		}
-		System.out.println(distance);
+	
 		return distance;
 	}
 

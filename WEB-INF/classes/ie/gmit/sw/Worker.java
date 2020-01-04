@@ -17,12 +17,13 @@ public class Worker {
 	 * @param Request
 	 * @param String
 	 */
+	static Request response;
 	public static void getJob(Request r,String option) {
 		System.out.println("IN get job"); 
 		Parser.readFile(option);
-		System.out.println("HELLO " + r.getMessage());
- 		Map result = Parser.parse(r.getMessage(),option);
+  		Map result = Parser.parse(r.getMessage(),option);
  		putResult(r,Parser.database.getLanguage(result));
+  		response = r;
 	}
 	/**
 	 * This method will put the result from performing the distance calculation into the out-queue
@@ -30,17 +31,12 @@ public class Worker {
 	 */
 	public static Language putResult(Request r,Language lang) {
 		//put result in outqueue
+		System.out.println("NUMBER " + r.getTaskNumber() + " " + lang);
 		ServiceHandler.outQueue.put(r.getTaskNumber(),lang);
-		System.out.println(ServiceHandler.outQueue.containsKey(r.getTaskNumber()));
-		System.out.println("Langauge is " + lang);
-		checkQueue();
+ 		checkQueue();
 		return lang;
 	}
-	public static long checkQueue() {
-		if(ServiceHandler.inQueue.isEmpty() == false) {
-			System.out.println(ServiceHandler.outQueue.get(1));
-			return 0;
-		}
-		return -1;
+	public static Request checkQueue() {
+		return response;
 	}
 }
