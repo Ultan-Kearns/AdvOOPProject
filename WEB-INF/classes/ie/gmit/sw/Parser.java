@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,8 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *         reading in of the dataset
  */
 public class Parser {
-	static Database db = new Database();
-	String key;
+	static Database database = new Database();
+	static String key;
 	Map query = new ConcurrentHashMap<String, Integer>();
 
 	// read in file store in map string languageString, String language, use regEx
@@ -23,7 +24,7 @@ public class Parser {
 	/**
 	 * This method reads the information from the dataset and stores it in a map
 	 */
-	public Map readFile(String option) {
+	public static void readFile(String option) {
 		BufferedReader br = null;
 		File f;
 		Request r = new Request("tjeo", 1);
@@ -35,38 +36,31 @@ public class Parser {
 			// TODO Auto-generated catch blsock
 			e.printStackTrace();
 		}
-		// just use database dba
-		Map<String, String> mapLanguage = new ConcurrentHashMap<String, String>();
-		String temp = "";
-		key = "";
+ 		String temp = "";
 		try {
+			Language lang;
 			while ((temp = br.readLine()) != null) {
 
 				// get language
 				key = temp.substring(temp.lastIndexOf('@'));
 				key = key.replace("@", "");
- 				// get rid of anything that isn't a letter or a digit
+				// get rid of anything that isn't a letter or a digit
 				temp = temp.replaceAll("\\W", "");
-				// parse using option
- 				// put in map using the Language as a key
-				mapLanguage.put(key, temp);
 				// needed to replace all whitespace in key always fun to debug....
 				key = key.replaceAll("\\W", "");
-				Language lang = Language.valueOf(key);
+				lang = Language.valueOf(key);
 				int op = Integer.parseInt(option);
-				System.out.println(option);
 				// parse into kmers then insert kmer size need to refactor only works for 2
 				for (int i = 0; i < temp.length() - op; i++) {
-					db.add(temp.substring(i, i + op), lang);
+					database.add(temp.substring(i, i + op), lang);
 				}
 			}
+ 			database.resize(300);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		return mapLanguage;
 	}
 
 	/**
@@ -75,36 +69,31 @@ public class Parser {
 	 * bre ks the string up into Kmers of the integer specified and returns a
 	 * stringbuffer which is equal to the string but broken into kmers
 	 */
-	public static String parse(String subjectString, String option, int query) {
+	public static Map parse(String subjectString, String option) {
+		Map<Integer, LanguageEntry> queryMap = new HashMap<Integer, LanguageEntry>();
 		// check subject string has even length if not append 0
 		// this is because the parser breaks the string up into even nums only
 		// need to fix for larger kmers than 2
 		if (subjectString.length() % Integer.parseInt(option) != 0) {
 			subjectString += "0";
 		}
- 		// need refactor
-		String kmers = "";
+		// need refactor
 		int frequency = 0;
-		for (int i = 0; i < Integer.parseInt(option); i++) {
-			kmers += ".";
-		}
 		// replace character at every two characters with delimiter except for end of
 		// string
 		// ?!$ ensures that no delimiter will be placed at end of the subject string
- 		final StringBuffer parsed = new StringBuffer(subjectString);
- 		if (query == 1) {
- 			int op = Integer.parseInt(option);
-			for (int i = op; i < parsed.length() - op; i++) {
+		final StringBuffer parsed = new StringBuffer(subjectString);
+		int op = Integer.parseInt(option);
+		for (int i = op; i < parsed.length() - op; i++) {
 
-				if (Worker.query.containsKey(parsed.subSequence(i, i + op))) {
-					frequency++;
-				}
-				Worker.query.put(parsed.substring(i, i + op), frequency);
-				System.out.println("test " + Worker.query.get(parsed.subSequence(i, i + 1)));
+			if (queryMap.containsKey(parsed.subSequence(i, i + op).hashCode())) {
+				frequency++;
 			}
+			queryMap.put(parsed.substring(i, i + op).hashCode(),
+					new LanguageEntry(parsed.substring(i, i + op).hashCode(), frequency));
 		}
 		// return string broken into k-mers need to do analysis here also make lower to
 		// lower probability
-		return parsed.toString().toLowerCase();
+		return queryMap;
 	}
 }

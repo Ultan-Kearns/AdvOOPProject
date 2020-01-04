@@ -9,7 +9,6 @@ import java.util.Map;
  * Worker gets next job in the inQueue performs operations and returns the result to the out-queue
  */
 public class Worker {
-	static Map query = new HashMap<Integer,LanguageEntry>();
 	public Worker() {
 
 	}
@@ -19,19 +18,22 @@ public class Worker {
 	 * @param String
 	 */
 	public static void getJob(Request r,String option) {
-		System.out.println("IN get job");
- 		Parser.parse(r.getMessage(),option,1);
+		System.out.println("IN get job"); 
+ 		Map result = Parser.parse(r.getMessage(),option);
  		Database db = new Database();
- 
- 		putResult(r);
+ 		if(result.size() != 0) {  
+ 			Parser.readFile(option);
+ 			System.out.println();
+ 		}
+ 		putResult(r,db.getLanguage(result));
 	}
 	/**
 	 * This method will put the result from performing the distance calculation into the out-queue
 	 * @param Request
 	 */
-	public static void putResult(Request r) {
+	public static void putResult(Request r,Language lang) {
 		//put result in outqueue
-		ServiceHandler.outQueue.put(r.getTaskNumber(),Language.Achinese);
+		ServiceHandler.outQueue.put(r.getTaskNumber(),lang);
 		//need to perform distance calculation and set language
 	}
 }

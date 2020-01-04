@@ -145,14 +145,9 @@ public class ServiceHandler extends HttpServlet {
 	public static void main(String[] args) {
 		//for testing methods
 		Parser p = new Parser();
-		String test = p.parse("T e s t ","5",1);
-		System.out.println(test);
+		p.readFile("2");
+	    p.parse("T e s t ","5");
 		Request r = new Request("This is a test", 1);
 		Worker.getJob(r, "2");
-		
-		Map temp = p.readFile("4");
-		System.out.println(temp.get("English"));
- 
-	
  	}
 }
