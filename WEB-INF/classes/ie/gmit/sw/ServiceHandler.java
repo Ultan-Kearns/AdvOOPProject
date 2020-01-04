@@ -14,7 +14,6 @@ import javax.servlet.http.*;
 
 import com.sun.org.apache.xml.internal.security.Init;
 
-
 /*
  * To compile this servlet, open a command prompt in the web application directory and execute the following commands:
  *
@@ -37,117 +36,131 @@ import com.sun.org.apache.xml.internal.security.Init;
  * 
  * @author Ultan Kearns
  * @version 1.00
- * @note Code was made using templates from John Healy which will be refactored and modified by me
+ * @note Code was made using templates from John Healy which will be refactored
+ *       and modified by me
  * 
  */
 public class ServiceHandler extends HttpServlet {
-	
-	private String languageDataSet; //This variable is shared by all HTTP requests for the servlet
-	private static long jobNumber = 0; //The number of the task in the async queue
+
+	private String languageDataSet; // This variable is shared by all HTTP requests for the servlet
+	private static long jobNumber = 0; // The number of the task in the async queue
 	private Database d;
 	private File f;
 	static Map<Long, Language> outQueue = new ConcurrentHashMap<Long, Language>();
-	private List<Request> inQueue = new LinkedList<Request>();
+	public static List<Request> inQueue = new LinkedList<Request>();
+
 	/**
-	 * Initializes the servelet this is used to do a basic setup of the 
-	 * server and throws an exception if servlet fails to start
-	 * and it loads the data set 
+	 * Initializes the servelet this is used to do a basic setup of the server and
+	 * throws an exception if servlet fails to start and it loads the data set
 	 */
 	public void init() throws ServletException {
-		ServletContext ctx = getServletContext(); //Get a handle on the application context
-		languageDataSet = ctx.getInitParameter("LANGUAGE_DATA_SET"); //Reads the value from the <context-param> in web.xml
-		//You can start to build the subject database at this point. The init() method is only ever called once during the life cycle of a servlet
+		ServletContext ctx = getServletContext(); // Get a handle on the application context
+		languageDataSet = ctx.getInitParameter("LANGUAGE_DATA_SET"); // Reads the value from the <context-param> in
+																		// web.xml
+		// You can start to build the subject database at this point. The init() method
+		// is only ever called once during the life cycle of a servlet
 		f = new File(languageDataSet);
 	}
+
 	/**
-	 * The doGet method takes two input params @param HttpServletRequest req & @param HttpServletResponse resp
-	 * and is responsible for setting up the UI 
+	 * The doGet method takes two input params @param HttpServletRequest req
+	 * & @param HttpServletResponse resp and is responsible for setting up the UI
 	 */
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.setContentType("text/html"); //Output the MIME type
-		PrintWriter out = resp.getWriter(); //Write out text. We can write out binary too and change the MIME type...
+		resp.setContentType("text/html"); // Output the MIME type
+		PrintWriter out = resp.getWriter(); // Write out text. We can write out binary too and change the MIME type...
 
-		//Initialise some request varuables with the submitted form info. These are local to this method and thread safe...
-		String option = req.getParameter("cmbOptions"); //Change options to whatever you think adds value to your assignment...
+		// Initialise some request varuables with the submitted form info. These are
+		// local to this method and thread safe...
+		String option = req.getParameter("cmbOptions"); // Change options to whatever you think adds value to your
+														// assignment...
 		String message = req.getParameter("query");
 		String taskNumber = req.getParameter("frmTaskNumber");
- 
+
 		out.print("<html><head><title>Advanced Object Oriented Software Development Assignment</title>");
 		out.print("</head>");
 		out.print("<body>");
-		if (taskNumber == null){
+		if (taskNumber == null) {
 			taskNumber = new String("Task Number: " + jobNumber);
 			jobNumber++;
-			//Add job to in-queue
-			inQueue.add(0,new Request(message,jobNumber));
- 		}else{
-			if(outQueue.containsKey(taskNumber)) {
-				//get worker to work in heres
-				out.print("Language: " + outQueue.get(taskNumber));
-				outQueue.remove(taskNumber);
-				
-			}
+			// Add job to in-queue
+			inQueue.add(0, new Request(message, jobNumber));
+			Worker.getJob(inQueue.get(0), option);
+			out.print("ADDED JOB  " + jobNumber);
+		} else {
+			out.print(outQueue.containsKey(taskNumber));
+
 		}
-
-
 
 		out.print("<H1>Processing job number: " + taskNumber + "</H1>");
 		out.print("<div id=\"r\"></div>");
 
 		out.print("<font color=\"#993333\"><b>");
-		out.print("Language Dataset is located at " + languageDataSet + " and is <b><u>" + f.length() + "</u></b> bytes in size");
+		out.print("Language Dataset is located at " + languageDataSet + " and is <b><u>" + f.length()
+				+ "</u></b> bytes in size");
 		out.print("<br>Option(s): " + option);
 		out.print("<br>Query Text : " + message);
 		out.print("</font><p/>");
 
-		out.print("<br>This servlet should only be responsible for handling client request and returning responses. Everything else should be handled by different objects. ");
-		out.print("Note that any variables declared inside this doGet() method are thread safe. Anything defined at a class level is shared between HTTP requests.");
+		out.print(
+				"<br>This servlet should only be responsible for handling client request and returning responses. Everything else should be handled by different objects. ");
+		out.print(
+				"Note that any variables declared inside this doGet() method are thread safe. Anything defined at a class level is shared between HTTP requests.");
 		out.print("</b></font>");
 
 		out.print("<P> Next Steps:");
-		out.print("<p>Tes</p>");
-		out.print("<h1>test</h1>");
+		out.print("fiw");
 		out.print("<OL>");
- 		out.print("<LI>Have some process check the LinkedList or BlockingQueue for message requests.");
-		out.print("<LI>Poll a message request from the front of the queue and pass the task to the language detection service.");
+		out.print("<LI>Have some process check the LinkedList or BlockingQueue for message requests.");
+		out.print(
+				"<LI>Poll a message request from the front of the queue and pass the task to the language detection service.");
 		out.print("<LI>Add the jobNumber as a key in a Map (the OUT-queue) and an initial value of null.");
-		out.print("<LI>Return the result of the language detection system to the client next time a request for the jobNumber is received and the task has been complete (value is not null).");
+		out.print(
+				"<LI>Return the result of the language detection system to the client next time a request for the jobNumber is received and the task has been complete (value is not null).");
 		out.print("</OL>");
-		
+		if (Worker.checkQueue() != -1) {
+
+			// get worker to work in heres
+			out.print("Language: " + outQueue.get(1));
+			outQueue.remove(taskNumber);
+		}
+
 		out.print("<form method=\"POST\" name=\"frmRequestDetails\">");
 		out.print("<input name=\"cmbOptions\" type=\"hidden\" value=\"" + option + "\">");
 		out.print("<input name=\"query\" type=\"hidden\" value=\"" + message + "\">");
 		out.print("<input name=\"frmTaskNumber\" type=\"hidden\" value=\"" + taskNumber + "\">");
 		out.print("<meta http-equiv=\\\"refresh\\\" content=\\\"10\\\">");
-		//call pull request here to poll queues
+		// return language name
+		// call pull request here to poll queues
 		out.print("</form>");
 		out.print("</body>");
 		out.print("</html>");
 
 		out.print("<script>");
-		//set waiting period 
+		// set waiting period
 		out.print("var wait=setTimeout(\"document.frmRequestDetails.submit();\", 10000);");
 		out.print("</script>");
 
-
 	}
+
 	/**
-	 * doPost method takes two params @param HttpServletRequest req & @param HttpServletResponse resp and is 
-	 * responsible for taking in the request and returning a response
+	 * doPost method takes two params @param HttpServletRequest req & @param
+	 * HttpServletResponse resp and is responsible for taking in the request and
+	 * returning a response
 	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
- 		doGet(req, resp);
- 	}
+		doGet(req, resp);
+	}
+
 	/**
 	 * This main method is used for testing and will not be used in final release
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//for testing methods
-		Parser p = new Parser();
-		p.readFile("2");
-	    p.parse("T e s t ","5");
-		Request r = new Request("This is a test", 1);
+		// for testing methods
+		Parser.readFile("2");
+		Request r = new Request("Today was gonna be the day", 1);
 		Worker.getJob(r, "2");
- 	}
+	}
 }

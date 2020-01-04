@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Database {
-	private Map<Language, Map<Integer, LanguageEntry>> db = new TreeMap<>();
+	private  Map<Language, Map<Integer, LanguageEntry>> db = new ConcurrentHashMap<>();
 
 	/**
 	 * 
@@ -21,6 +21,7 @@ public class Database {
 		}
 		// may be issue since passing full string with delimiter
 		langDb.put(kmer, new LanguageEntry(kmer, frequency));
+ 
 	}
 
 	/**
@@ -37,8 +38,7 @@ public class Database {
 		} else {
 			langDb = new TreeMap<Integer, LanguageEntry>();
 			db.put(lang, langDb);
-			System.out.println("TEST IN DB" + db.size());
-		}
+ 		}
 		return langDb;
 	}
 
@@ -83,12 +83,11 @@ public class Database {
 		TreeSet<OutOfPlaceMetric> oopm = new TreeSet<>();
 		Set<Language> langs = db.keySet();
 		// fails here because db not saving from add
-		add("e",Language.English);
+ 
 		for (Language lang : langs) {
 			oopm.add(new OutOfPlaceMetric(lang, getOutOfPlaceDistance(query, db.get(lang))));
 		}
-		System.out.println("TESTING HERE " + query.size() + " DB " + db.size());
-		return oopm.first().getLanguage();
+  		return oopm.first().getLanguage();
 	}
 
 	private int getOutOfPlaceDistance(Map<Integer, LanguageEntry> query, Map<Integer, LanguageEntry> subject) {

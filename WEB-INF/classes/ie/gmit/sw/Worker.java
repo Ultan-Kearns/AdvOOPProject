@@ -19,21 +19,28 @@ public class Worker {
 	 */
 	public static void getJob(Request r,String option) {
 		System.out.println("IN get job"); 
+		Parser.readFile(option);
+		System.out.println("HELLO " + r.getMessage());
  		Map result = Parser.parse(r.getMessage(),option);
- 		Database db = new Database();
- 		if(result.size() != 0) {  
- 			Parser.readFile(option);
- 			System.out.println();
- 		}
- 		putResult(r,db.getLanguage(result));
+ 		putResult(r,Parser.database.getLanguage(result));
 	}
 	/**
 	 * This method will put the result from performing the distance calculation into the out-queue
 	 * @param Request
 	 */
-	public static void putResult(Request r,Language lang) {
+	public static Language putResult(Request r,Language lang) {
 		//put result in outqueue
 		ServiceHandler.outQueue.put(r.getTaskNumber(),lang);
-		//need to perform distance calculation and set language
+		System.out.println(ServiceHandler.outQueue.containsKey(r.getTaskNumber()));
+		System.out.println("Langauge is " + lang);
+		checkQueue();
+		return lang;
+	}
+	public static long checkQueue() {
+		if(ServiceHandler.inQueue.isEmpty() == false) {
+			System.out.println(ServiceHandler.outQueue.get(1));
+			return 0;
+		}
+		return -1;
 	}
 }
