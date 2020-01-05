@@ -2,7 +2,7 @@ package ie.gmit.sw;
 /**
  * 
  * @author sl0th
- * This class creates a request and will be used to store the message and job nummber
+ * This class creates a request and will be used to store the message and job number
  */
 public class Request {
 	private long taskNumber;

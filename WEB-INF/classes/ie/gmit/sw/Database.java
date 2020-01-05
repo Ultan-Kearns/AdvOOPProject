@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 
  * Deals with establishing a database for the language and comparing it to the query set
- * uses code from John Healy   * @author John Healy
+ * uses code from John Healy   
  *
  */
 public class Database {

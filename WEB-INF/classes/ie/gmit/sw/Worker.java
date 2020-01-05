@@ -14,8 +14,7 @@ public class Worker {
 	}
 	/**
 	 * Gets next job from the in-queue which is defined in service handler
-	 * @param Request
-	 * @param String
+ 
 	 */
 	static Request response;
 	public static void getJob(Request r,String option) {
@@ -26,14 +25,16 @@ public class Worker {
  		putResult(r,Parser.database.getLanguage(result));
   		response = r;
 	}
+	
 	/**
-	 * This method will put the result from performing the distance calculation into the out-queue
-	 * @param Request
+	 * This method will put the result from performing the distance calculation into
+	 * the out-queue
+	 * 
 	 */
-	private static Language putResult(Request r,Language lang) {
-		//put result in outqueue
+	private static Language putResult(Request r, Language lang) {
+		// put result in outqueue
 		System.out.println("NUMBER " + r.getTaskNumber() + " " + lang);
-		ServiceHandler.outQueue.put(r.getTaskNumber(),lang);
+		ServiceHandler.outQueue.put(r.getTaskNumber(), lang);
 		return lang;
 	}
  

@@ -20,7 +20,9 @@ public class Parser {
 	// read in file store in map string languageString, String language, use regEx
 	// to find string after @ symbol
 	/**
+	 * 
 	 * This method reads the information from the dataset and stores it in a map
+	 * @param String option - this is whatever option for kmers
 	 */
 	public static void readFile(String option) {
 		BufferedReader br = null;
@@ -67,6 +69,7 @@ public class Parser {
 	 * String @param option, which is defined in service handler,as parameters then
 	 * bre ks the string up into Kmers of the integer specified and returns a
 	 * stringbuffer which is equal to the string but broken into kmers
+	 * @return Map
 	 */
 	//need to sort map based on frequency
 	public static Map parse(String subjectString, String option) {
@@ -99,8 +102,8 @@ public class Parser {
 	/**
 	 * Takes map as parameter then returns the map with kmers sorted by frequency
 	 * 
-	 * @param m<Integer, LanguageEntry>
-	 * @return
+	 * @param Map<Integer, LanguageEntry> m
+	 * @return Map<Integer, LanguageEntry> sorted query map
 	 */
 	public static Map<Integer,LanguageEntry>  sort(Map<Integer,LanguageEntry> m) {
 		//get key set and values

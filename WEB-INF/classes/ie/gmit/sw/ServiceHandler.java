@@ -36,7 +36,7 @@ import com.sun.org.apache.xml.internal.security.Init;
  * 
  * @author Ultan Kearns
  * @version 1.00
- * @note Code was made using templates from John Healy which will be refactored
+ * Code was made using templates from John Healy which will be refactored
  *       and modified by me
  * 
  */
@@ -63,8 +63,11 @@ public class ServiceHandler extends HttpServlet {
 	}
 
 	/**
-	 * The doGet method takes two input params @param HttpServletRequest req
-	 * & @param HttpServletResponse resp and is responsible for setting up the UI
+	 *  
+	 * @param HttpServletRequest req
+	 *  @param HttpServletResponse resp 
+	 *  The doGet method takes two input params
+	 *  and is responsible for setting up the UI
 	 */
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("text/html"); // Output the MIME type
@@ -122,8 +125,10 @@ public class ServiceHandler extends HttpServlet {
 	}
 
 	/**
-	 * doPost method takes two params @param HttpServletRequest req & @param
-	 * HttpServletResponse resp and is responsible for taking in the request and
+	 *  
+	 * @param HttpServletRequest req 
+	 * @param HttpServletResponse resp 
+	 * doPost method takes two params and is responsible for taking in the request and
 	 * returning a response
 	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
