@@ -5,9 +5,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import static java.util.stream.Collectors.*;
+import static java.util.Map.Entry.*;
 
 /**
  * 
@@ -17,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Parser {
 	static Database database = new Database();
 	static String key;
-	Map query = new ConcurrentHashMap<String, Integer>();
+	 	static Map<Integer, LanguageEntry> queryMap = new HashMap<Integer, LanguageEntry>();
 
 	// read in file store in map string languageString, String language, use regEx
 	// to find string after @ symbol
@@ -47,13 +48,17 @@ public class Parser {
 				// needed to replace all whitespace in key always fun to debug....
 				key = key.replaceAll("\\W", "");
 				lang = Language.valueOf(key);
+ 
 				int op = Integer.parseInt(option);
 				// parse into kmers then insert kmer size
 				for (int i = 0; i < temp.length() - op; i+= op) {
-					database.add(temp.substring(i, i + op).toLowerCase(), lang);
-				}
+					database.add(temp.substring(i, i + op), lang);
+ 				}
+
 			}
 			database.resize(300);
+ 
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,25 +71,70 @@ public class Parser {
 	 * bre ks the string up into Kmers of the integer specified and returns a
 	 * stringbuffer which is equal to the string but broken into kmers
 	 */
+	//need to sort map based on frequency
 	public static Map parse(String subjectString, String option) {
-		Map<String, LanguageEntry> queryMap = new HashMap<String, LanguageEntry>();
 		// need refactor
 		final StringBuffer parsed = new StringBuffer(subjectString);
 		int op = Integer.parseInt(option);
-		System.out.println(parsed);
+ 
 		for (int i = 0; i < parsed.length() - op; i+= op) {
 			int frequency = 1;
-			// need to set frequency of kmer
-			System.out.println(parsed.substring(i, i + op));
-			if (queryMap.containsKey(parsed.substring(i, i + op).toLowerCase())) {
- 				System.out.println("FREQUENCY " + queryMap.get(parsed.substring(i, i + op).toLowerCase()).getFrequency());
-				frequency += queryMap.get(parsed.substring(i, i + op).toLowerCase()).getFrequency();
-			}
+			int rank = 1;
 
-			queryMap.put(parsed.substring(i, i + op).toLowerCase(),
-					new LanguageEntry(parsed.substring(i, i + op).toLowerCase().hashCode(), frequency));
+			System.out.println(parsed.substring(i, i + op));
+
+			if (queryMap.containsKey(parsed.substring(i, i + op).hashCode())) {
+				System.out.println(parsed.substring(i, i + op));
+				frequency += queryMap.get(parsed.substring(i, i + op).hashCode()).getFrequency();
+				queryMap.get(parsed.substring(i, i + op).hashCode()).setFrequency(frequency);
+
+				rank += queryMap.get(parsed.substring(i, i + op).hashCode()).getRank();
+				queryMap.get(parsed.substring(i, i + op).hashCode()).setRank(rank);
+			}	 
+			queryMap.put(parsed.substring(i, i + op).hashCode(),
+					new LanguageEntry(i, frequency));
+		}	 
+		System.out.println(queryMap.values());
+		queryMap = sort(queryMap);
+		//need to sort by frequency
+		return queryMap;
+	}
+	/**
+	 * Takes map as parameter then returns the map with kmers sorted by frequency
+	 * 
+	 * @param m<Integer, LanguageEntry>
+	 * @return
+	 */
+	public static Map<Integer,LanguageEntry>  sort(Map<Integer,LanguageEntry> m) {
+		//get key set and values
+		List<LanguageEntry> queryText = new ArrayList<>(m.values());	
+		List<Integer> queryKeys = new ArrayList<>(m.keySet());
+	 
+ 			 for(int i = 0; i < queryKeys.size(); i++) {
+ 				 LanguageEntry l = queryText.get(i);
+ 			 if(i != queryText.size() - 1 && l.getFrequency() > queryText.get(i + 1).getFrequency())
+			 {
+				 LanguageEntry temp = queryText.get(i + 1);
+				 System.out.println(" test query " + queryMap.get(queryKeys.get(i + 1)).getFrequency());
+
+				 queryText.get(i + 1).setKmer(l.getKmer());
+				 queryText.get(i + 1).setFrequency(l.getFrequency());
+				 queryText.get(i + 1).setRank(l.getRank());
+				 System.out.println(" test " + queryText.get(i + 1).getFrequency());
+ 				 queryMap.put(queryKeys.get(i),queryText.get(i));
+ 				 queryText.get(i).setKmer(temp.getKmer());
+				 queryText.get(i).setFrequency(temp.getFrequency());
+				 queryText.get(i).setRank(temp.getRank());
+  				 queryMap.put(queryKeys.get(i),queryText.get(i));
+ 
+ 			}
+		 
+			 System.out.println("L " + l.getFrequency());
 
 		}
-		return queryMap;
+ 			System.out.println("VALUES " + queryMap.values());
+
+ 			
+		 return queryMap;
 	}
 }

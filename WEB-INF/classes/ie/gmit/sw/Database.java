@@ -18,10 +18,9 @@ public class Database {
 		int frequency = 1;
 		if (langDb.containsKey(kmer)) {
 			frequency += langDb.get(kmer).getFrequency();
-		}
+ 		}
 		// may be issue since passing full string with delimiter
 		langDb.put(kmer, new LanguageEntry(kmer, frequency));
- 
 	}
 
 	/**
@@ -65,7 +64,7 @@ public class Database {
 		int rank = 1;
 		for (LanguageEntry le : les) {
 			le.setRank(rank);
-			temp.put(le.getKmer(), le);
+ 			temp.put(le.getKmer(), le);
 			if (rank == max)
 				break;
 			rank++;

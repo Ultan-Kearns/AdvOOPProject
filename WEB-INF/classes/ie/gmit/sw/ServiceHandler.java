@@ -47,7 +47,7 @@ public class ServiceHandler extends HttpServlet {
 	private Database d;
 	private File f;
 	static Map<Long, Language> outQueue = new ConcurrentHashMap<Long, Language>();
-	public static List<Request> inQueue = new LinkedList<Request>();
+	private List<Request> inQueue = new LinkedList<Request>();
 
 	/**
 	 * Initializes the servelet this is used to do a basic setup of the server and
@@ -85,14 +85,8 @@ public class ServiceHandler extends HttpServlet {
 			jobNumber++;
 			// Add job to in-queue
 			inQueue.add(0, new Request(message, jobNumber));
-			Worker.getJob(inQueue.get(0), option);
-			out.print("ADDED JOB");
-		} else {
-			out.print(outQueue.containsKey(taskNumber));
-			Worker.checkQueue();
-		}
-
-		out.print("<H1>Processing job number: " + taskNumber + "</H1>");
+ 		}  
+		out.print("<H1>Processing job number: " + taskNumber + " Results will appear below</H1>");
 		out.print("<div id=\"r\"></div>");
 
 		out.print("<font color=\"#993333\"><b>");
@@ -101,23 +95,8 @@ public class ServiceHandler extends HttpServlet {
 		out.print("<br>Option(s): " + option);
 		out.print("<br>Query Text : " + message);
 		out.print("</font><p/>");
-
-		out.print(
-				"<br>This servlet should only be responsible for handling client request and returning responses. Everything else should be handled by different objects. ");
-		out.print(
-				"Note that any variables declared inside this doGet() method are thread safe. Anything defined at a class level is shared between HTTP requests.");
-		out.print("</b></font>");
-
-		out.print("<P> Next Steps:");
-		out.print("fiw");
-		out.print("<OL>");
-		out.print("<LI>Have some process check the LinkedList or BlockingQueue for message requests.");
-		out.print(
-				"<LI>Poll a message request from the front of the queue and pass the task to the language detection service.");
-		out.print("<LI>Add the jobNumber as a key in a Map (the OUT-queue) and an initial value of null.");
-		out.print(
-				"<LI>Return the result of the language detection system to the client next time a request for the jobNumber is received and the task has been complete (value is not null).");
-		out.print("</OL>");
+		Worker.getJob(inQueue.get(0), option);
+		inQueue.remove(0);
 		out.print("<form method=\"POST\" name=\"frmRequestDetails\">");
 		out.print("<input name=\"cmbOptions\" type=\"hidden\" value=\"" + option + "\">");
 		out.print("<input name=\"query\" type=\"hidden\" value=\"" + message + "\">");
@@ -132,8 +111,12 @@ public class ServiceHandler extends HttpServlet {
 		out.print("<script>");
 		// set waiting period
 		out.print("var wait=setTimeout(\"document.frmRequestDetails.submit();\", 10000);");
+		
 		out.print("</script>");
-
+		if(outQueue.containsKey(jobNumber))
+		{
+			out.print("<h1> The language is " + outQueue.get(jobNumber).getLanguageName() + "</h1>");
+		}
 	}
 
 	/**
@@ -153,7 +136,7 @@ public class ServiceHandler extends HttpServlet {
 	public static void main(String[] args) {
 		// for testing methods
 		Parser.readFile("1");
-		Request r = new Request("bruidhinn rithe, cuiridh e a làmhan timcheall oirre agus bidh e ga suirghe gus am bi i a’ tuiteam ann an gaol air. Uaireannan bidh ise a’ gabhail òrain-gaoil dha agus",1);
-  		Worker.getJob(r, "4");
+		Request r = new Request("die naovenant mer kort bove zie oetkoume. De eilendsjes groepere ziech zoe: Banaba (e geïsoleerd eiland in 't weste), de Gilberteilen (16 atolle in 't midde), de",50);
+  		Worker.getJob(r, "2");
 	}
 }

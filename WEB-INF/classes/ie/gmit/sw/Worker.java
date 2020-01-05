@@ -22,6 +22,7 @@ public class Worker {
 		System.out.println("IN get job"); 
 		Parser.readFile(option);
   		Map result = Parser.parse(r.getMessage(),option);
+   		System.out.println(result.values());
  		putResult(r,Parser.database.getLanguage(result));
   		response = r;
 	}
@@ -33,10 +34,8 @@ public class Worker {
 		//put result in outqueue
 		System.out.println("NUMBER " + r.getTaskNumber() + " " + lang);
 		ServiceHandler.outQueue.put(r.getTaskNumber(),lang);
- 		checkQueue();
 		return lang;
 	}
-	public static Request checkQueue() {
-		return response;
-	}
+ 
+ 
 }
