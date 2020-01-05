@@ -96,14 +96,21 @@ public class ServiceHandler extends HttpServlet {
 		out.print("<br>Query Text : " + message);
 		out.print("</font><p/>");
 		Worker.getJob(inQueue.get(0), option);
-		inQueue.remove(0);
+		//poll queue for new jobs
+		if(outQueue.containsKey(jobNumber) || inQueue.get(0).getTaskNumber() != jobNumber)
+		{
+			taskNumber = new String("Task Number: " + jobNumber);
+			message = inQueue.get(0).getMessage();
+
+			out.print("<h1> The language is " + outQueue.get(jobNumber).getLanguageName() + "</h1>");
+			out.print(inQueue.size());
+		}
 		out.print("<form method=\"POST\" name=\"frmRequestDetails\">");
 		out.print("<input name=\"cmbOptions\" type=\"hidden\" value=\"" + option + "\">");
 		out.print("<input name=\"query\" type=\"hidden\" value=\"" + message + "\">");
 		out.print("<input name=\"frmTaskNumber\" type=\"hidden\" value=\"" + taskNumber + "\">");
 		out.print("<meta http-equiv=\\\"refresh\\\" content=\\\"10\\\">");
-		// return language name
-		// call pull request here to poll queues
+ 
 		out.print("</form>");
 		out.print("</body>");
 		out.print("</html>");
@@ -111,12 +118,7 @@ public class ServiceHandler extends HttpServlet {
 		out.print("<script>");
 		// set waiting period
 		out.print("var wait=setTimeout(\"document.frmRequestDetails.submit();\", 10000);");
-		
 		out.print("</script>");
-		if(outQueue.containsKey(jobNumber))
-		{
-			out.print("<h1> The language is " + outQueue.get(jobNumber).getLanguageName() + "</h1>");
-		}
 	}
 
 	/**
@@ -127,16 +129,7 @@ public class ServiceHandler extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doGet(req, resp);
 	}
-
-	/**
-	 * This main method is used for testing and will not be used in final release
-	 * 
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		// for testing methods
-		Parser.readFile("1");
-		Request r = new Request("die naovenant mer kort bove zie oetkoume. De eilendsjes groepere ziech zoe: Banaba (e geïsoleerd eiland in 't weste), de Gilberteilen (16 atolle in 't midde), de",50);
-  		Worker.getJob(r, "2");
+		
 	}
 }

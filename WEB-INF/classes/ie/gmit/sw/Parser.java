@@ -6,14 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import static java.util.stream.Collectors.*;
-import static java.util.Map.Entry.*;
 
 /**
  * 
  * @author sl0th This class will handle the parsing of data into k-mers and the
- *         reading in of the dataset
+ *         reading in of the dataset as well as all other functions related to ngram system
  */
 public class Parser {
 	static Database database = new Database();

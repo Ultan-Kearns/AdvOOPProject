@@ -2,7 +2,12 @@ package ie.gmit.sw;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
+/**
+ * 
+ * Deals with establishing a database for the language and comparing it to the query set
+ * uses code from John Healy   * @author John Healy
+ *
+ */
 public class Database {
 	private  Map<Language, Map<Integer, LanguageEntry>> db = new ConcurrentHashMap<>();
 
@@ -23,13 +28,6 @@ public class Database {
 		langDb.put(kmer, new LanguageEntry(kmer, frequency));
 	}
 
-	/**
-	 * 
-	 * @param lang
-	 * @return
-	 * 
-	 *         Maps an integer to the language entry
-	 */
 	private Map<Integer, LanguageEntry> getLanguageEntries(Language lang) {
 		Map<Integer, LanguageEntry> langDb = null;
 		if (db.containsKey(lang)) {
@@ -43,7 +41,7 @@ public class Database {
 
 	/**
 	 * 
-	 * @param max Resizes the data set
+	 * @param max Resizes the data set to get top kmers
 	 */
 	public void resize(int max) {
 		Set<Language> keys = db.keySet();
@@ -54,7 +52,7 @@ public class Database {
 	}
 
 	/**
-	 * Gets Language that has highest rank
+	 * Gets Language that has highest rank that is the language 
 	 */
 	public Map<Integer, LanguageEntry> getTop(int max, Language lang) {
 		Map<Integer, LanguageEntry> temp = new ConcurrentHashMap<>();
@@ -74,9 +72,9 @@ public class Database {
 	}
 
 	/**
-	 * 
+	 * Calls function to calculate out of place distance and returns top ranking language.
 	 * @param Map<Integer, LanguageEntry> 
-	 * @return Stores the result of calculating oopm to a treeset
+	 * @return oopm
 	 */
 	public Language getLanguage(Map<Integer, LanguageEntry> query) {
 		TreeSet<OutOfPlaceMetric> oopm = new TreeSet<>();
@@ -135,7 +133,7 @@ public class Database {
 
 	/**
 	 * Returns all pertinent information from this class such as total kmers in
-	 * languag and all languages in the set
+	 * language and all languages in the set
 	 */
 	@Override
 	public String toString() {

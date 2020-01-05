@@ -1,5 +1,9 @@
 package ie.gmit.sw;
-
+/**
+ * Contains all getters and setters for the languages also will be used to compare languages
+ * @author sl0th
+ *
+ */
 public class LanguageEntry implements Comparable<LanguageEntry> {
 	private int kmer;
 	private int frequency;

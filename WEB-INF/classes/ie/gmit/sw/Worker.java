@@ -30,7 +30,7 @@ public class Worker {
 	 * This method will put the result from performing the distance calculation into the out-queue
 	 * @param Request
 	 */
-	public static Language putResult(Request r,Language lang) {
+	private static Language putResult(Request r,Language lang) {
 		//put result in outqueue
 		System.out.println("NUMBER " + r.getTaskNumber() + " " + lang);
 		ServiceHandler.outQueue.put(r.getTaskNumber(),lang);

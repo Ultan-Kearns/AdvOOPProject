@@ -242,11 +242,14 @@ public enum Language {
 	Zeeuws ("Zeeuws");
 	
 	private final CharSequence language;
-
+	
     private Language(CharSequence language) {
         this.language = language;
     }
-	
+	/**
+	 * return language name
+	 * @return charsequence
+	 */
     public CharSequence getLanguageName() {
         return this.language;
     }
